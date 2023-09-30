@@ -2,8 +2,9 @@ import { FlatList } from 'react-native';
 import { products } from '../../mocks/products';
 import { Text } from '../Text';
 
-import { Product, Image, ProductDetails, Separator } from './styles';
+import { Product, Image, ProductDetails, Separator, AddToCartButton } from './styles';
 import { formatCurrency } from '../../utils/formatCurrency';
+import { PlusCircle } from '../Icons/PlusCircle';
 
 export function Menu() {
   return (
@@ -17,7 +18,7 @@ export function Menu() {
         <Product>
           <Image
             source={{
-              uri: `http://192.168.3.148:3001/uploads/${product.imagePath}`
+              uri: `http://192.168.3.147:3001/uploads/${product.imagePath}`
             }}
           />
 
@@ -28,6 +29,9 @@ export function Menu() {
             </Text>
             <Text size={14} weight="600">{formatCurrency(product.price)}</Text>
           </ProductDetails>
+          <AddToCartButton>
+            <PlusCircle />
+          </AddToCartButton>
         </Product>
       )}
     />
