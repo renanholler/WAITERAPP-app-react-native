@@ -27,7 +27,7 @@ export const QuantityContainer = styled.View`
 `;
 
 export const ProductDetails = styled.View`
-
+  display: flex;
 `;
 
 export const Summary = styled.View`

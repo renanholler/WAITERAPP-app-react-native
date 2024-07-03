@@ -1,27 +1,22 @@
+// src/screens/Main/index.tsx
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import React, { useEffect, useState } from 'react';
 import { ActivityIndicator } from 'react-native';
-
-import { useEffect, useState } from 'react';
-import { Button } from '../components/Button';
-import { Cart } from '../components/Cart';
-import { Categories } from '../components/Categories';
-import { Header } from '../components/Header';
-import { Menu } from '../components/Menu';
-import { TableModal } from '../components/TableModal';
-import { CartItem } from '../types/CartItem';
-import { Product } from '../types/Product';
-import {
-  CategoriesContainer,
-  CenteredContainer,
-  Container,
-  Footer, FooterContainer,
-  MenuContainer
-} from './styles';
-
-import { Empty } from '../components/Icons/Empty';
-import { Text } from '../components/Text';
-import { Category } from '../types/Category';
-
-import { api } from '../utils/api';
+import { Button } from '../../components/Button';
+import { Cart } from '../../components/Cart';
+import { Categories } from '../../components/Categories';
+import { Header } from '../../components/Header';
+import { Empty } from '../../components/Icons/Empty';
+import { Menu } from '../../components/Menu';
+import { TableModal } from '../../components/TableModal';
+import { Text } from '../../components/Text';
+import { RootStackParamList } from '../../routes';
+import { CartItem } from '../../types/CartItem';
+import { Category } from '../../types/Category';
+import { Product } from '../../types/Product';
+import api from '../../utils/api';
+import { CategoriesContainer, CenteredContainer, Container, Footer, FooterContainer, MenuContainer } from './styles';
 
 export function Main() {
   const [isTableModalVisible, setIsTableModalVisible] = useState(false);
@@ -31,26 +26,41 @@ export function Main() {
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoadingProducts, setIsLoadingProducts] = useState(false);
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   useEffect(() => {
-    Promise.all([
-      api.get('/categories'),
-      api.get('/products')
-    ]).then(([categoriesResponse, productsResponse]) => {
-      setCategories(categoriesResponse.data);
-      setProducts(productsResponse.data);
-      setIsLoading(false);
-    });
+    async function checkAuth() {
+      const token = await AsyncStorage.getItem('token');
+      if (!token) {
+        navigation.navigate('Login');
+      } else {
+        loadData();
+      }
+    }
+
+    async function loadData() {
+      try {
+        const [categoriesResponse, productsResponse] = await Promise.all([
+          api.get('/categories'),
+          api.get('/products'),
+        ]);
+        setCategories(categoriesResponse.data);
+        setProducts(productsResponse.data);
+        setIsLoading(false);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    checkAuth();
   }, []);
 
   async function handleSelectCategory(categoryId: string) {
-    const route = !categoryId
-      ? '/products'
-      : `/categories/${categoryId}/products`;
+    const route = !categoryId ? '/products' : `/categories/${categoryId}/products`;
 
     setIsLoadingProducts(true);
 
-    const {data} = await api.get(route);
+    const { data } = await api.get(route);
     setProducts(data);
     setIsLoadingProducts(false);
   }
@@ -75,7 +85,7 @@ export function Main() {
       if (itemIndex < 0) {
         return prevState.concat({
           quantity: 1,
-          product
+          product,
         });
       }
 
@@ -83,7 +93,7 @@ export function Main() {
       const item = newCartItems[itemIndex];
       newCartItems[itemIndex] = {
         ...item,
-        quantity: item.quantity + 1
+        quantity: item.quantity + 1,
       };
       return newCartItems;
     });
@@ -105,7 +115,7 @@ export function Main() {
       }
       newCartItems[itemIndex] = {
         ...item,
-        quantity: item.quantity - 1
+        quantity: item.quantity - 1,
       };
       return newCartItems;
     });
@@ -114,10 +124,7 @@ export function Main() {
   return (
     <>
       <Container>
-        <Header
-          selectedTable={selectedTable}
-          onCancelOrder={handleResetOrder}
-        />
+        <Header selectedTable={selectedTable} onCancelOrder={handleResetOrder} />
 
         {isLoading ? (
           <CenteredContainer>
@@ -126,10 +133,7 @@ export function Main() {
         ) : (
           <>
             <CategoriesContainer>
-              <Categories
-                categories={categories}
-                onSelectCategory={handleSelectCategory}
-              />
+              <Categories categories={categories} onSelectCategory={handleSelectCategory} />
             </CategoriesContainer>
 
             {isLoadingProducts ? (
@@ -140,16 +144,13 @@ export function Main() {
               <>
                 {products.length > 0 ? (
                   <MenuContainer>
-                    <Menu
-                      onAddToCart={handleAddToCart}
-                      products={products}
-                    />
+                    <Menu onAddToCart={handleAddToCart} products={products} />
                   </MenuContainer>
                 ) : (
                   <CenteredContainer>
                     <Empty />
                     <Text color="#666" style={{ marginTop: 24 }}>
-                  Nenhum produto foi encontrado!
+                      Nenhum produto foi encontrado!
                     </Text>
                   </CenteredContainer>
                 )}
@@ -157,16 +158,12 @@ export function Main() {
             )}
           </>
         )}
-
       </Container>
 
       <Footer>
         <FooterContainer>
           {!selectedTable && (
-            <Button
-              onPress={() => setIsTableModalVisible(true)}
-              disabled={isLoading}
-            >
+            <Button onPress={() => setIsTableModalVisible(true)} disabled={isLoading}>
               Novo pedido
             </Button>
           )}
@@ -184,9 +181,9 @@ export function Main() {
       </Footer>
 
       <TableModal
-        visible = {isTableModalVisible}
-        onClose = {() => setIsTableModalVisible(false)}
-        onSave = {handleSaveTable}
+        visible={isTableModalVisible}
+        onClose={() => setIsTableModalVisible(false)}
+        onSave={handleSaveTable}
       />
     </>
   );

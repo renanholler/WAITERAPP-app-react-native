@@ -1,10 +1,9 @@
 import { useFonts } from 'expo-font';
 import { StatusBar } from 'expo-status-bar';
-
 import 'intl';
 import 'intl/locale-data/jsonp/pt-BR';
-
-import { Main } from './src/Main';
+import React from 'react';
+import Routes from './src/routes';
 
 export default function App() {
   const [isFontsLoaded] = useFonts({
@@ -20,7 +19,7 @@ export default function App() {
   return (
     <>
       <StatusBar style='dark'/>
-      <Main />
+      <Routes />
     </>
   );
 }
