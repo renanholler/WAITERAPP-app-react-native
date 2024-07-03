@@ -1,17 +1,21 @@
 import { ActivityIndicator } from 'react-native';
 
-import {
-  Container, CategoriesContainer, MenuContainer, Footer, FooterContainer, CenteredContainer
-} from './styles';
-import { Header } from '../components/Header';
-import { Categories } from '../components/Categories';
-import { Menu } from '../components/Menu';
-import { Button } from '../components/Button';
-import { TableModal } from '../components/TableModal';
 import { useEffect, useState } from 'react';
+import { Button } from '../components/Button';
 import { Cart } from '../components/Cart';
+import { Categories } from '../components/Categories';
+import { Header } from '../components/Header';
+import { Menu } from '../components/Menu';
+import { TableModal } from '../components/TableModal';
 import { CartItem } from '../types/CartItem';
 import { Product } from '../types/Product';
+import {
+  CategoriesContainer,
+  CenteredContainer,
+  Container,
+  Footer, FooterContainer,
+  MenuContainer
+} from './styles';
 
 import { Empty } from '../components/Icons/Empty';
 import { Text } from '../components/Text';

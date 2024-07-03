@@ -1,15 +1,15 @@
+import { useState } from 'react';
 import { FlatList, TouchableOpacity } from 'react-native';
 import { CartItem } from '../../types/CartItem';
-import { Item, ProductContainer, Actions, Image, QuantityContainer, ProductDetails, Summary, TotalContainer } from './styles';
-import { Text } from '../Text';
-import { formatCurrency } from '../../utils/formatCurrency';
-import { PlusCircle } from '../Icons/PlusCircle';
-import { MinusCircle } from '../Icons/MinusCircle';
-import { Button } from '../Button';
 import { Product } from '../../types/Product';
-import { OrderConfirmedModal } from '../OrderConfirmedModal';
-import { useState } from 'react';
 import { api } from '../../utils/api';
+import { formatCurrency } from '../../utils/formatCurrency';
+import { Button } from '../Button';
+import { MinusCircle } from '../Icons/MinusCircle';
+import { PlusCircle } from '../Icons/PlusCircle';
+import { OrderConfirmedModal } from '../OrderConfirmedModal';
+import { Text } from '../Text';
+import { Actions, Image, Item, ProductContainer, ProductDetails, QuantityContainer, Summary, TotalContainer } from './styles';
 
 interface CartProps {
   cartItems: CartItem[];
@@ -64,7 +64,7 @@ export function Cart({ cartItems, onAdd, onDecrement, onConfirmOrder, selectedTa
               <ProductContainer>
                 <Image
                   source={{
-                    uri: `http://192.168.3.48:3001/uploads/${cartItem.product.imagePath}`
+                    uri: `${process.env.BASE_URL}/uploads/${cartItem.product.imagePath}`
                   }}
                 />
                 <QuantityContainer>

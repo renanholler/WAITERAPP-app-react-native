@@ -1,20 +1,20 @@
 import { FlatList, Modal } from 'react-native';
+import { Product } from '../../types/Product';
+import { formatCurrency } from '../../utils/formatCurrency';
+import { Button } from '../Button';
+import { Close } from '../Icons/Close';
+import { Text } from '../Text';
 import {
-  Image,
   CloseButton,
-  ModalBody,
-  Header,
-  IngredientsContainer,
-  Ingredient,
   Footer,
   FooterContainer,
+  Header,
+  Image,
+  Ingredient,
+  IngredientsContainer,
+  ModalBody,
   PriceContainer
 } from './styles';
-import { Button } from '../Button';
-import { Text } from '../Text';
-import { Product } from '../../types/Product';
-import { Close } from '../Icons/Close';
-import { formatCurrency } from '../../utils/formatCurrency';
 
 interface ProductModalProps {
   visible: boolean;
@@ -42,8 +42,7 @@ export function ProductModal({ visible, onClose, product, onAddToCart }: Product
     >
       <Image
         source={{
-          uri: `http://192.168.3.48:3001/uploads/${product.imagePath}`
-          // uri: `http://10.90.35.124:3001/uploads/${product.imagePath}`
+          uri: `${process.env.BASE_URL}/uploads/${product.imagePath}`
         }}
       >
         <CloseButton onPress={onClose}>

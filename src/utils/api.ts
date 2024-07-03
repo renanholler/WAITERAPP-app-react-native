@@ -1,6 +1,7 @@
 import axios from 'axios';
 
+console.log(process.env.BASE_URL);
+
 export const api = axios.create({
-  baseURL: 'http://192.168.3.48:3001'
-  // baseURL: 'http://10.90.35.124:3001'
+  baseURL: process.env.BASE_URL
 });

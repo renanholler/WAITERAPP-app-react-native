@@ -1,12 +1,12 @@
 import { FlatList } from 'react-native';
 import { Text } from '../Text';
 
-import { ProductContainer, Image, ProductDetails, Separator, AddToCartButton } from './styles';
+import { useState } from 'react';
+import { Product } from '../../types/Product';
 import { formatCurrency } from '../../utils/formatCurrency';
 import { PlusCircle } from '../Icons/PlusCircle';
 import { ProductModal } from '../ProductModal';
-import { useState } from 'react';
-import { Product } from '../../types/Product';
+import { AddToCartButton, Image, ProductContainer, ProductDetails, Separator } from './styles';
 
 interface MenuProps {
   onAddToCart: (product: Product) => void;
@@ -41,8 +41,7 @@ export function Menu({ onAddToCart, products }: MenuProps) {
           <ProductContainer onPress={() => handleOpenModal(product)}>
             <Image
               source={{
-                uri: `http://192.168.3.48:3001/uploads/${product.imagePath}`
-                // uri: `http://10.90.35.124:3001/uploads/${product.imagePath}`
+                uri: `${process.env.BASE_URL}/uploads/${product.imagePath}`
               }}
             />
 
